@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import axios from 'axios';
+import React from 'react';
 
-function App() {
+const App = () => {
+
+  const handleLocation = async () => {
+    navigator.geolocation.getCurrentPosition(async position => {
+
+      const { latitude, longitude } = position.coords;
+
+      try {
+        const response = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+        console.log(response.data.address.city);
+      } catch (error) {
+        console.error("Error fetching location data:", error);
+      }
+    });
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <button onClick={handleLocation}>
+        Get Location
+      </button>
     </div>
   );
-}
+};
 
 export default App;
